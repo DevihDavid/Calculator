@@ -13,7 +13,7 @@ class Calculator(functions.Mixin):
         self.scrollbarY = Scrollbar(master, orient=VERTICAL, command=self.result_area_yview)
         self.scrollbarY.grid(row=1, rowspan=4, column=7, sticky=N + S)
         self.scrollbarX = Scrollbar(master, orient=HORIZONTAL, command=self.result_area_xview)
-        self.scrollbarX.grid(row=5, column=6, sticky=W+E)
+        self.scrollbarX.grid(row=5, column=6, sticky=W + E)
 
         self.result_area = Text(master, width=40, height=10, wrap=NONE)
         self.result_area.grid(row=1, rowspan=4, column=6)
@@ -62,32 +62,25 @@ class Calculator(functions.Mixin):
         button.grid(row=row, column=column)
         return button
 
+    def make_lambda(self, name, button):
+        return lambda event=None: self.change_input_key(name, button)
+
     def bind_buttons(self):
-        self.master.bind('0', lambda event=None: self.change_input_key("0", self.button0))
-        self.master.bind('1', lambda event=None: self.change_input_key("1", self.button1))
-        self.master.bind('2', lambda event=None: self.change_input_key("2", self.button2))
-        self.master.bind('3', lambda event=None: self.change_input_key("3", self.button3))
-        self.master.bind('4', lambda event=None: self.change_input_key("4", self.button4))
-        self.master.bind('5', lambda event=None: self.change_input_key("5", self.button5))
-        self.master.bind('6', lambda event=None: self.change_input_key("6", self.button6))
-        self.master.bind('7', lambda event=None: self.change_input_key("7", self.button7))
-        self.master.bind('8', lambda event=None: self.change_input_key("8", self.button8))
-        self.master.bind('9', lambda event=None: self.change_input_key("9", self.button9))
-        self.master.bind('<BackSpace>', lambda event=None: self.change_action_key(self.clear_last(), \
-                                                                                  self.buttonBackspace))
-        self.master.bind('<Delete>', lambda event=None: self.change_action_key(self.write_area.delete(0, END)\
-                                                                               , self.buttonC))
+        button_input = {"0": self.button0, "1": self.button1, "2": self.button2, "3": self.button3, "4": self.button4,
+                        "5": self.button5, "6": self.button6, "7": self.button7, "8": self.button8, "9": self.button9,
+                        ",": self.buttonDot, ".": self.buttonDot, "+": self.buttonPlus, "-": self.buttonMinus,
+                        "*": self.buttonMulti, "/": self.buttonDiv, "(": self.buttonLeftPar, ")": self.buttonRightPar}
+
+        for name, action in button_input.items():
+            self.master.bind(name, self.make_lambda(name, action))
+
+        self.master.bind('<BackSpace>', lambda event=None: self.change_action_key(self.clear_last(),
+                                                                               self.buttonBackspace))
+        self.master.bind('<Delete>', lambda event=None: self.change_action_key(self.write_area.delete(0, END),
+                                                                               self.buttonC))
         self.master.bind('<Return>', lambda event=None: self.change_action_key(self.equal(), self.buttonEqual))
         self.master.bind('=', lambda event=None: self.change_action_key(self.equal(), self.buttonEqual))
         self.master.bind('^', lambda event=None: self.change_action_key(self.square(), self.buttonSquare))
-        self.master.bind(',', lambda event=None: self.change_input_key(".", self.buttonDot))
-        self.master.bind('.', lambda event=None: self.change_input_key(".", self.buttonDot))
-        self.master.bind('+', lambda event=None: self.change_input_key("+", self.buttonPlus))
-        self.master.bind('-', lambda event=None: self.change_input_key("-", self.buttonMinus))
-        self.master.bind('*', lambda event=None: self.change_input_key("*", self.buttonMinus))
-        self.master.bind('/', lambda event=None: self.change_input_key("/", self.buttonDiv))
-        self.master.bind('(', lambda event=None: self.change_input_key("(", self.buttonLeftPar))
-        self.master.bind(')', lambda event=None: self.change_input_key(")", self.buttonRightPar))
 
     def change_input_key(self, value, button):
         self.write_area.insert(END, value)
