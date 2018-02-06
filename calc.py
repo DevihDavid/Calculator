@@ -62,7 +62,7 @@ class Calculator(functions.Mixin):
         button.grid(row=row, column=column)
         return button
 
-    def make_lambda(self, name, button):
+    def make_lambda_input(self, name, button):
         return lambda event=None: self.change_input_key(name, button)
 
     def bind_buttons(self):
@@ -72,7 +72,7 @@ class Calculator(functions.Mixin):
                         "*": self.buttonMulti, "/": self.buttonDiv, "(": self.buttonLeftPar, ")": self.buttonRightPar}
 
         for name, action in button_input.items():
-            self.master.bind(name, self.make_lambda(name, action))
+            self.master.bind(name, self.make_lambda_input(name, action))
 
         self.master.bind('<BackSpace>', lambda event=None: self.change_action_key(self.clear_last(),
                                                                                self.buttonBackspace))
