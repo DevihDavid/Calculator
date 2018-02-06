@@ -68,8 +68,8 @@ class Calculator(functions.Mixin):
     def bind_buttons(self):
         button_input = {"0": self.button0, "1": self.button1, "2": self.button2, "3": self.button3, "4": self.button4,
                         "5": self.button5, "6": self.button6, "7": self.button7, "8": self.button8, "9": self.button9,
-                        ",": self.buttonDot, ".": self.buttonDot, "+": self.buttonPlus, "-": self.buttonMinus,
-                        "*": self.buttonMulti, "/": self.buttonDiv, "(": self.buttonLeftPar, ")": self.buttonRightPar}
+                        ".": self.buttonDot, "+": self.buttonPlus, "-": self.buttonMinus, "*": self.buttonMulti,
+                        "/": self.buttonDiv, "(": self.buttonLeftPar, ")": self.buttonRightPar}
 
         for name, action in button_input.items():
             self.master.bind(name, self.make_lambda_input(name, action))
@@ -81,6 +81,7 @@ class Calculator(functions.Mixin):
         self.master.bind('<Return>', lambda event=None: self.change_action_key(self.equal(), self.buttonEqual))
         self.master.bind('=', lambda event=None: self.change_action_key(self.equal(), self.buttonEqual))
         self.master.bind('^', lambda event=None: self.change_action_key(self.square(), self.buttonSquare))
+        self.master.bind(',', lambda event=None: self.change_input_key(".", self.buttonDot))
 
     def change_input_key(self, value, button):
         self.write_area.insert(END, value)
