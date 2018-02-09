@@ -1,0 +1,201 @@
+import functions
+from math import *
+from tkinter import *
+import normal_calc
+
+
+class Scientific_calc(functions.Mixin):
+    def __init__(self, master):
+
+        self.master = master
+
+        top_menu = Menu(master)
+        master.config(menu=top_menu)
+
+        calc_type = Menu(top_menu)
+        top_menu.add_cascade(label="Calculator", menu=calc_type)
+        calc_type.add_command(label="Simple", command=self.test)
+        calc_type.add_command(label="Scientific", command=self.test)
+        calc_type.add_command(label="Date calculation", command=self.test)
+
+        converter = Menu(top_menu)
+        top_menu.add_cascade(label="Converter", menu=converter)
+        converter.add_command(label="Currency")
+        converter.add_separator()
+        converter.add_command(label="Volume")
+        converter.add_command(label="Length")
+        converter.add_command(label="Weight and mass")
+        converter.add_command(label="Temperature")
+        converter.add_command(label="Energy")
+        converter.add_command(label="Area")
+        converter.add_command(label="Speed")
+        converter.add_command(label="Time")
+        converter.add_command(label="Power")
+        converter.add_command(label="Pressure")
+        converter.add_command(label="Angle")
+        converter.add_command(label="Data")
+
+        self.button0 = self.create_and_place_button_input("0", 4, 1)
+        self.button1 = self.create_and_place_button_input("1", 3, 0)
+        self.button2 = self.create_and_place_button_input("2", 3, 1)
+        self.button3 = self.create_and_place_button_input("3", 3, 2)
+        self.button4 = self.create_and_place_button_input("4", 2, 0)
+        self.button5 = self.create_and_place_button_input("5", 2, 1)
+        self.button6 = self.create_and_place_button_input("6", 2, 2)
+        self.button7 = self.create_and_place_button_input("7", 1, 0)
+        self.button8 = self.create_and_place_button_input("8", 1, 1)
+        self.button9 = self.create_and_place_button_input("9", 1, 2)
+        self.buttonPlus = self.create_and_place_button_input("+", 1, 3)
+        self.buttonMinus = self.create_and_place_button_input("-", 2, 3)
+        self.buttonMulti = self.create_and_place_button_input("*", 3, 3)
+        self.buttonDot = self.create_and_place_button_input(".", 4, 0)
+        self.buttonDiv = self.create_and_place_button_input("/", 4, 3)
+        self.buttonLeftPar = self.create_and_place_button_input("(", 4, 4)
+        self.buttonRightPar = self.create_and_place_button_input(")", 4, 5)
+
+        self.buttonSquare = self.create_and_place_button_action("x²", 1, 4, self.square)
+        self.buttonSqrt = self.create_and_place_button_action("√", 2, 4, self.sqrt)
+        self.buttonSquareY = self.create_and_place_button_action("xʸ", 3, 4, self.squareY)
+        self.buttonEqual = self.create_and_place_button_action("=", 4, 2, self.equal)
+
+        self.buttonN = self.create_and_place_button_action("n!", 1, 5, self.c_factorial)
+        self.buttonE = self.create_and_place_button_action("eˣ", 2, 5, self.exponent)
+        self.button10 = self.create_and_place_button_action("10ˣ", 3, 5, self.raise_10)
+        self.buttonlogx = self.create_and_place_button_action("logx", 1, 6, self.c_log)
+        self.buttonln = self.create_and_place_button_action("ln", 2, 6, self.c_ln)
+        self.button_put_e = self.create_and_place_button_action("e", 3, 6, lambda: self.write_area.insert(END, str(e)))
+        self.buttonP = self.create_and_place_button_action("Π", 4, 6, lambda: self.write_area.insert(END, str(pi)))
+        self.buttonSin = self.create_and_place_button_action("sin", 1, 7, self.c_sin)
+        self.buttonCos = self.create_and_place_button_action("cos", 2, 7, self.c_cos)
+        self.buttonTg = self.create_and_place_button_action("tg", 3, 7, self.c_tg)
+        self.buttonCtg = self.create_and_place_button_action("ctg", 4, 7, self.c_ctg)
+        self.buttonArcsin = self.create_and_place_button_action("arcsin", 1, 8, self.c_arcsin)
+        self.buttonArccos = self.create_and_place_button_action("arccos", 2, 8, self.c_arcctg)
+        self.buttonArctg = self.create_and_place_button_action("arctg", 3, 8, self.c_arctg)
+        self.buttonArcctg = self.create_and_place_button_action("arcctg", 4, 8, self.c_arcctg)
+        self.buttonBackspace = self.create_and_place_button_action("←", 1, 9, self.clear_last)
+        self.buttonC = self.create_and_place_button_action("C", 2, 9, lambda: self.write_area.delete(0, END))
+        self.buttonCE = self.create_and_place_button_action("CE", 3, 9, self.clear)
+
+        self.scrollbarY = Scrollbar(master, orient=VERTICAL, command=self.result_area_yview)
+        self.scrollbarY.grid(row=1, rowspan=4, column=11, sticky=N + S)
+        self.scrollbarX = Scrollbar(master, orient=HORIZONTAL, command=self.result_area_xview)
+        self.scrollbarX.grid(row=5, column=10, sticky=W + E)
+
+        self.result_area = Text(master, width=40, height=10, wrap=NONE)
+        self.result_area.grid(row=1, rowspan=4, column=10)
+
+        self.result_area_text = Label(text="The result is:")
+        self.result_area_text.grid(row=0, column=10, sticky=W + E)
+
+        self.type_science = Label(text="Scientific version", anchor=W)
+        self.type_science.grid(row=5, column=0, columnspan=2)
+        self.write_area = Entry(master, justify=RIGHT)
+        self.write_area.grid(row=0, columnspan=10, sticky=W + E, ipady=6, pady=6)
+
+        self.bind_buttons()
+
+
+    def make_lambda_input(self, name, button):
+        return lambda event=None: self.change_input_key(name, button)
+
+    def bind_buttons(self):
+        button_input = {"0": self.button0, "1": self.button1, "2": self.button2, "3": self.button3, "4": self.button4,
+                        "5": self.button5, "6": self.button6, "7": self.button7, "8": self.button8, "9": self.button9,
+                        ".": self.buttonDot, "+": self.buttonPlus, "-": self.buttonMinus, "*": self.buttonMulti,
+                        "/": self.buttonDiv, "(": self.buttonLeftPar, ")": self.buttonRightPar}
+
+        for name, action in button_input.items():
+            self.master.bind(name, self.make_lambda_input(name, action))
+
+        self.master.bind('<BackSpace>', lambda event=None: self.change_action_key(self.clear_last(),
+                                                                               self.buttonBackspace))
+        self.master.bind('<Delete>', lambda event=None: self.change_action_key(self.write_area.delete(0, END),
+                                                                               self.buttonC))
+        self.master.bind('<Return>', lambda event=None: self.change_action_key(self.equal(), self.buttonEqual))
+        self.master.bind('=', lambda event=None: self.change_action_key(self.equal(), self.buttonEqual))
+        self.master.bind('^', lambda event=None: self.change_action_key(self.square(), self.buttonSquare))
+        self.master.bind(',', lambda event=None: self.change_input_key(".", self.buttonDot))
+
+    def change_input_key(self, value, button):
+        self.write_area.insert(END, value)
+        button.config(relief=SUNKEN)
+        button.after(120, lambda: button.config(relief=RAISED))
+
+    def change_action_key(self, action, button):
+        action
+        button.config(relief=SUNKEN)
+        button.after(120, lambda: button.config(relief=RAISED))
+
+    def result_area_yview(self, *L):
+        op, howMany = L[0], L[1]
+
+        if op == 'scroll':
+            units = L[2]
+            self.result_area.yview_scroll(howMany, units)
+        elif op == 'moveto':
+            self.result_area.yview_moveto(howMany)
+
+    def result_area_xview(self, *L):
+        op, howMany = L[0], L[1]
+
+        if op == 'scroll':
+            units = L[2]
+            self.result_area.xview_scroll(howMany, units)
+        elif op == 'moveto':
+            self.result_area.xview_moveto(howMany)
+
+    def create_and_place_button_input(self, value, row, column):
+        button = Button(text=value, height=2, width=8, command=lambda: self.write_area.insert(END, value))
+        button.grid(row=row, column=column)
+        return button
+
+    def create_and_place_button_action(self, text, row, column, action):
+        button = Button(text=text, height=2, width=8, command=action)
+        button.grid(row=row, column=column)
+        return button
+
+    def test(self):
+        try:
+            button_to_clear = [self.button0, self.button1, self.button2, self.button3, self.button4, self.button5,
+                               self.button6, self.button7, self.button8, self.button9, self.buttonDot, self.buttonEqual,
+                               self.buttonLeftPar, self.buttonRightPar, self.buttonSqrt, self.buttonSquare,
+                               self.buttonSquareY, self.buttonPlus, self.buttonMinus, self.buttonDiv,
+                               self.buttonMulti, self.buttonC, self.buttonCE, self.buttonBackspace,
+                               self.write_area, self.result_area, self.result_area_text, self.scrollbarX,
+                               self.scrollbarY, self.type_science, self.buttonN, self.buttonE, self.button10,
+                               self.buttonlogx, self.buttonln, self.button_put_e, self.buttonP, self.buttonSin,
+                               self.buttonCos, self.buttonTg, self.buttonCtg, self.buttonArcsin,
+                               self.buttonArccos, self.buttonArctg, self.buttonArcctg]
+
+            for name in button_to_clear:
+                name.grid_remove()
+
+
+            normal = normal_calc.Normal_calc(root)
+
+        except AttributeError:
+            try:
+                button_to_clear = [self.button0, self.button1, self.button2, self.button3, self.button4, self.button5,
+                                   self.button6, self.button7, self.button8, self.button9, self.buttonDot, self.buttonEqual,
+                                   self.buttonLeftPar, self.buttonRightPar, self.buttonSqrt, self.buttonSquare,
+                                   self.buttonSquareY, self.buttonPlus, self.buttonMinus, self.buttonDiv,
+                                   self.buttonMulti, self.buttonC, self.buttonCE, self.buttonBackspace,
+                                   self.write_area, self.result_area, self.result_area_text, self.scrollbarX,
+                                   self.scrollbarY, self.type]
+
+                for name in button_to_clear:
+                    name.grid_remove()
+                science = Scientific_calc(root)
+
+            except AttributeError:
+                button_to_clear = [self.initial, self.day, self.month, self.year, self.sep1, self.sep2, self.sep3,
+                                   self.day_choose, self.day2_choose, self.month_choose, self.month2_choose,
+                                   self.year_choose, self.year2_choose, self.final, self.result_text, self.result_area2,
+                                   self.info, self.buttonClean, self.buttonGo]
+
+                for name in button_to_clear:
+                    name.grid_remove()
+
+
+

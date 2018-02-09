@@ -3,6 +3,8 @@ import functions
 from math import e, pi
 import datetime
 from tkinter.messagebox import showerror
+import te
+import normal_calc
 
 
 class Calculator(functions.Mixin):
@@ -15,9 +17,9 @@ class Calculator(functions.Mixin):
 
         calc_type = Menu(top_menu)
         top_menu.add_cascade(label="Calculator", menu=calc_type)
-        calc_type.add_command(label="Simple", command=self.simple_calc)
-        calc_type.add_command(label="Scientific", command=self.scientific_calc)
-        calc_type.add_command(label="Date calculation", command=self.date_calc)
+        calc_type.add_command(label="Simple", command=self.test)
+        calc_type.add_command(label="Scientific", command=self.test)
+        calc_type.add_command(label="Date calculation", command=self.test)
 
         converter = Menu(top_menu)
         top_menu.add_cascade(label="Converter", menu=converter)
@@ -53,7 +55,7 @@ class Calculator(functions.Mixin):
         self.result_area_text.grid(row=0, column=6, sticky=W + E)
 
         self.type = Label(master, text="Simple version")
-        self.type.grid(row=5, column=0, columnspan=6)
+        self.type.grid(row=5, column=0, columnspan=2)
 
         self.button0 = self.create_and_place_button_input("0", 4, 1)
         self.button1 = self.create_and_place_button_input("1", 3, 0)
@@ -142,7 +144,9 @@ class Calculator(functions.Mixin):
         elif op == 'moveto':
             self.result_area.xview_moveto(howMany)
 
+
     def scientific_calc(self):
+        buttons_to_clear = []
         try:
             buttons_to_remove = [self.buttonBackspace, self.buttonC, self.buttonCE, self.type, self.result_area_text]
 
@@ -352,6 +356,47 @@ class Calculator(functions.Mixin):
                                                                                self.buttonGo))
         self.master.bind('<Delete>', lambda event=None: self.change_action_key(self.clean_date(), self.buttonClean))
         self.set_current_date()
+
+    def test(self):
+        try:
+            button_to_clear = [self.button0, self.button1, self.button2, self.button3, self.button4, self.button5,
+                               self.button6, self.button7, self.button8, self.button9, self.buttonDot, self.buttonEqual,
+                               self.buttonLeftPar, self.buttonRightPar, self.buttonSqrt, self.buttonSquare,
+                               self.buttonSquareY, self.buttonPlus, self.buttonMinus, self.buttonDiv,
+                               self.buttonMulti, self.buttonC, self.buttonCE, self.buttonBackspace,
+                               self.write_area, self.result_area, self.result_area_text, self.scrollbarX,
+                               self.scrollbarY, self.type_science, self.buttonN, self.buttonE, self.button10,
+                               self.buttonlogx, self.buttonln, self.button_put_e, self.buttonP, self.buttonSin,
+                               self.buttonCos, self.buttonTg, self.buttonCtg, self.buttonArcsin,
+                               self.buttonArccos, self.buttonArctg, self.buttonArcctg]
+
+            for name in button_to_clear:
+                name.grid_remove()
+
+            normal = normal_calc.Normal_calc(root)
+
+        except AttributeError:
+            try:
+                button_to_clear = [self.button0, self.button1, self.button2, self.button3, self.button4, self.button5,
+                                   self.button6, self.button7, self.button8, self.button9, self.buttonDot, self.buttonEqual,
+                                   self.buttonLeftPar, self.buttonRightPar, self.buttonSqrt, self.buttonSquare,
+                                   self.buttonSquareY, self.buttonPlus, self.buttonMinus, self.buttonDiv,
+                                   self.buttonMulti, self.buttonC, self.buttonCE, self.buttonBackspace,
+                                   self.write_area, self.result_area, self.result_area_text, self.scrollbarX,
+                                   self.scrollbarY, self.type]
+
+                for name in button_to_clear:
+                    name.grid_remove()
+                science = te.Scientific_calc(root)
+
+            except AttributeError:
+                button_to_clear = [self.initial, self.day, self.month, self.year, self.sep1, self.sep2, self.sep3,
+                                   self.day_choose, self.day2_choose, self.month_choose, self.month2_choose,
+                                   self.year_choose, self.year2_choose, self.final, self.result_text, self.result_area2,
+                                   self.info, self.buttonClean, self.buttonGo]
+
+                for name in button_to_clear:
+                    name.grid_remove()
 
 
 root = Tk()

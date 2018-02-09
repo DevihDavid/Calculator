@@ -5,8 +5,9 @@ from tkinter.messagebox import showerror
 import datetime
 
 
-class Mixin:
 
+
+class Mixin:
 
     def error(self):
         showerror("ERROR", "You typed wrong character.\n Try again!")
@@ -31,7 +32,6 @@ class Mixin:
     def clear_last(self, event=None):
         get_length = len(self.write_area.get())
         self.write_area.delete(get_length - 1)
-
 
     def clear(self, event=None):
         self.write_area.delete(0, END)
@@ -295,6 +295,8 @@ class Mixin:
 
     def clean_date(self):
         self.result_area2.delete(0, END)
+
+
 
 
 
