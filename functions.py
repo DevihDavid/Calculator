@@ -296,6 +296,43 @@ class Mixin:
     def clean_date(self):
         self.result_area2.delete(0, END)
 
+    def clear_buttons(self):
+        try:
+            button_to_clear = [self.button0, self.button1, self.button2, self.button3, self.button4, self.button5,
+                               self.button6, self.button7, self.button8, self.button9, self.buttonDot,
+                               self.buttonEqual, self.buttonLeftPar, self.buttonRightPar, self.buttonSqrt,
+                               self.buttonSquare,
+                               self.buttonSquareY, self.buttonPlus, self.buttonMinus, self.buttonDiv,
+                               self.buttonMulti, self.buttonC, self.buttonCE, self.buttonBackspace,
+                               self.write_area, self.result_area, self.result_area_text, self.scrollbarX,
+                               self.scrollbarY, self.type_science, self.buttonN, self.buttonE, self.button10,
+                               self.buttonlogx, self.buttonln, self.button_put_e, self.buttonP, self.buttonSin,
+                               self.buttonCos, self.buttonTg, self.buttonCtg, self.buttonArcsin,
+                               self.buttonArccos, self.buttonArctg, self.buttonArcctg]
+
+            for name in button_to_clear:
+                name.grid_remove()
+        except AttributeError:
+            try:
+                things_to_remove = [self.button1, self.button2, self.button3, self.button4, self.button5, self.button6,
+                                    self.button7, self.button8, self.button9, self.button0, self.buttonDot,
+                                    self.buttonEqual, self.buttonPlus, self.buttonMinus, self.buttonMulti,
+                                    self.buttonDiv, self.buttonSquare, self.buttonSquareY, self.buttonRightPar,
+                                    self.buttonLeftPar, self.buttonC, self.buttonCE, self.buttonBackspace,
+                                    self.buttonSqrt, self.write_area, self.result_area, self.result_area_text,
+                                    self.type, self.scrollbarX, self.scrollbarY]
+
+                for name in things_to_remove:
+                    name.grid_remove()
+            except AttributeError:
+                button_to_clear = [self.initial, self.day, self.month, self.year, self.sep1, self.sep2, self.sep3,
+                                   self.day_choose, self.day2_choose, self.month_choose, self.month2_choose,
+                                   self.year_choose, self.year2_choose, self.final, self.result_text, self.result_area2,
+                                   self.info, self.buttonClean, self.buttonGo]
+
+                for name in button_to_clear:
+                    name.grid_remove()
+
 
 
 
