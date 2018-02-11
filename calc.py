@@ -3,6 +3,9 @@ import functions
 from math import e, pi
 import datetime
 from tkinter.messagebox import showerror
+from tkinter import ttk
+from bs4 import BeautifulSoup
+import requests
 
 
 class Calculator(functions.Mixin):
@@ -21,7 +24,7 @@ class Calculator(functions.Mixin):
 
         converter = Menu(top_menu)
         top_menu.add_cascade(label="Converter", menu=converter)
-        converter.add_command(label="Currency")
+        converter.add_command(label="Currency", command=self.currency_calc)
         converter.add_separator()
         converter.add_command(label="Volume")
         converter.add_command(label="Length")
@@ -318,6 +321,50 @@ class Calculator(functions.Mixin):
         self.buttonSquareY = self.create_and_place_button_action("xʸ", 3, 4, self.squareY)
         self.buttonCE = self.create_and_place_button_action("CE", 3, 5, self.clear)
         self.buttonEqual = self.create_and_place_button_action("=", 4, 2, self.equal)
+
+    def currency_calc(self):
+        self.clear_buttons()
+
+        self.count = Label(text="How much:")
+        self.count.grid(row=0, column=0)
+
+        self.value = Entry(justify=RIGHT)
+        self.value.grid(row=1, column=0, padx=2, pady=2, ipady=5)
+
+        self.currencies = sorted(['USD', 'EUR', 'PLN', 'CHF', 'NOK', 'JPY', 'AUD', 'CAD', 'GBP'])
+        self.var = StringVar()
+        self.var.set(self.currencies[0])
+        self.currencies_input = OptionMenu(root, self.var, *self.currencies)
+        self.currencies_input.grid(row=1, column=1)
+
+        self.to = Label(text="to")
+        self.to.grid(row=1, column=2)
+
+        self.currencies2 = sorted(['USD', 'EUR', 'PLN', 'CHF', 'NOK', 'JPY', 'AUD', 'CAD', 'GBP'])
+        self.var2 = StringVar()
+        self.var2.set(self.currencies2[0])
+        self.currencies_output = OptionMenu(root, self.var2, *self.currencies2)
+        self.currencies_output.grid(row=1, column=3)
+
+        self.buttonArrow = Button(text="▶", width=2, height=1, command=self.convert_money)
+        self.buttonArrow.grid(row=1, column=4)
+        self.buttonClean = Button(text="CE", width=6, height=3, command=self.clear_currencies)
+        self.buttonClean.grid(row=2, column=6)
+        self.master.bind('<Return>', lambda event=None: self.change_action_key(self.convert_money(),
+                                                                               self.buttonArrow))
+        self.master.bind('<Delete>', lambda event=None: self.change_action_key(self.clear_currencies(), self.buttonClean))
+
+        self.result = Label(text="Result:")
+        self.result.grid(row=2, column=0)
+
+        self.result_area = Text(width=30, height=3, wrap=NONE)
+        self.result_area.grid(row=2, column=1, columnspan=5)
+
+        self.scrollbarX = Scrollbar(orient=HORIZONTAL, command=self.result_area_xview)
+        self.scrollbarX.grid(row=3, column=1, columnspan=5, sticky=W + E)
+
+        self.type = Label(text="Currency converter")
+        self.type.grid(row=4, column=0)
 
 
 root = Tk()

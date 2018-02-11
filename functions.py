@@ -3,6 +3,9 @@ import re
 from tkinter import *
 from tkinter.messagebox import showerror
 import datetime
+from bs4 import BeautifulSoup
+import requests
+
 
 
 class Mixin:
@@ -295,6 +298,39 @@ class Mixin:
     def clean_date(self):
         self.result_area2.delete(0, END)
 
+    def get_value(self):
+        input_currency = self.var.get()
+        output_currency = self.var2.get()
+        if input_currency == "USD":
+            url = "https://finance.yahoo.com/quote/" + output_currency + "=X?p=" + output_currency + "=X"
+            get_url_code = str(BeautifulSoup(requests.get(url).text, "html.parser"))
+            get_currency_value = re.search(r'<!-- react-text: 15 -->\d.\d+<', get_url_code)
+            currency_value = float(get_url_code[get_currency_value.start() + 23: get_currency_value.end() - 1])
+            return currency_value
+        else:
+            url = "https://finance.yahoo.com/quote/" + input_currency + output_currency + "=X?p=" + input_currency + \
+                  output_currency + "=X"
+            get_url_code = str(BeautifulSoup(requests.get(url).text, "html.parser"))
+            get_currency_value = re.search(r'<!-- react-text: 15 -->\d.\d+<', get_url_code)
+            currency_value = float(get_url_code[get_currency_value.start() + 23: get_currency_value.end() - 1])
+            return currency_value
+
+    def convert_money(self):
+        input_money = self.value.get()
+
+        if re.search('[a-zA-Z,+\-/*()]+', input_money) or input_money == "":
+            showerror("ERROR!", "Type only numbers!\nTry again!")
+        else:
+            rate = self.get_value()
+            money = round(eval(compile(input_money, '<string>', 'eval')) * rate, 2)
+            self.result_area.delete(1.0, END)
+            self.result_area.insert(1.0, input_money + " " + self.var.get() + " = " + str(money) + " " + \
+                                    self.var2.get())
+
+    def clear_currencies(self):
+        self.value.delete(0, END)
+        self.result_area.delete(1.0, END)
+
     def clear_buttons(self):
         current_state = self.type.cget('text')
 
@@ -329,6 +365,13 @@ class Mixin:
                                 self.day_choose, self.day2_choose, self.month_choose, self.month2_choose,
                                 self.year_choose, self.year2_choose, self.final, self.result_text, self.result_area2,
                                 self.type, self.buttonClean, self.buttonGo]
+
+            for name in things_to_remove:
+                name.grid_remove()
+        elif current_state == "Currency converter":
+            things_to_remove = [self.count, self.value, self.currencies_input, self.currencies_output, self.to,
+                                self.buttonArrow, self.buttonClean, self.type, self.result, self.result_area,
+                                self.scrollbarX]
 
             for name in things_to_remove:
                 name.grid_remove()
