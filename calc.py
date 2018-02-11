@@ -198,8 +198,8 @@ class Calculator(functions.Mixin):
         self.result_area_text = Label(text="The result is:")
         self.result_area_text.grid(row=0, column=10, sticky=W + E)
 
-        self.type_science = Label(text="Scientific version", anchor=W)
-        self.type_science.grid(row=5, column=0, columnspan=2)
+        self.type = Label(text="Scientific version", anchor=W)
+        self.type.grid(row=5, column=0, columnspan=2)
         self.write_area = Entry(justify=RIGHT)
         self.write_area.grid(row=0, columnspan=10, sticky=W + E, ipady=6, pady=6)
 
@@ -259,8 +259,8 @@ class Calculator(functions.Mixin):
         self.result_area2 = Entry(justify=LEFT)
         self.result_area2.grid(row=6, columnspan=5, sticky=W + E, ipady=6, padx=8)
 
-        self.info = Label(text="Date calculator", justify=LEFT)
-        self.info.grid(row=7, column=0, columnspan=5)
+        self.type = Label(text="Date calculator", justify=LEFT)
+        self.type.grid(row=7, column=0, columnspan=2)
 
         self.buttonGo = Button(text="Go!", width=7, height=1, command=self.check_date_correctness)
         self.buttonGo.grid(row=6, column=5)

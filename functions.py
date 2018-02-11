@@ -5,8 +5,6 @@ from tkinter.messagebox import showerror
 import datetime
 
 
-
-
 class Mixin:
 
     def error(self):
@@ -16,8 +14,8 @@ class Mixin:
         equation = self.write_area.get()
 
         return re.search('[a-zA-Z,]+', equation) or equation == "" or re.search('[+\-/.]{2,}', equation) \
-        or re.search('^[+*/.]', equation) or re.search('[+\-*/.]$', equation) \
-        or re.search('[*]{3,}', equation)
+               or re.search('^[+*/.]', equation) or re.search('[+\-*/.]$', equation) \
+               or re.search('[*]{3,}', equation)
 
     def equal(self, event=None):
         equation = self.write_area.get()
@@ -25,7 +23,8 @@ class Mixin:
             self.error()
             self.write_area.delete(0, END)
         else:
-            self.result_area.insert(1.0, self.write_area.get() + "=" + str(eval(compile(equation, '<string>', 'eval'))) + "\n")
+            self.result_area.insert(1.0, self.write_area.get() + "=" + str(
+                eval(compile(equation, '<string>', 'eval'))) + "\n")
             self.write_area.delete(0, END)
             self.write_area.insert(0, str(eval(compile(equation, '<string>', 'eval'))))
 
@@ -93,7 +92,7 @@ class Mixin:
             self.write_area.delete(0, END)
         else:
             result = exp(eval(compile(equation, '<string>', 'eval')))
-            self.result_area.insert(1.0, "e**"+ equation + "=" + str(result) + "\n")
+            self.result_area.insert(1.0, "e**" + equation + "=" + str(result) + "\n")
             self.write_area.delete(0, END)
             self.write_area.insert(0, str(result))
 
@@ -297,45 +296,39 @@ class Mixin:
         self.result_area2.delete(0, END)
 
     def clear_buttons(self):
-        try:
-            button_to_clear = [self.button0, self.button1, self.button2, self.button3, self.button4, self.button5,
-                               self.button6, self.button7, self.button8, self.button9, self.buttonDot,
-                               self.buttonEqual, self.buttonLeftPar, self.buttonRightPar, self.buttonSqrt,
-                               self.buttonSquare,
-                               self.buttonSquareY, self.buttonPlus, self.buttonMinus, self.buttonDiv,
-                               self.buttonMulti, self.buttonC, self.buttonCE, self.buttonBackspace,
-                               self.write_area, self.result_area, self.result_area_text, self.scrollbarX,
-                               self.scrollbarY, self.type_science, self.buttonN, self.buttonE, self.button10,
-                               self.buttonlogx, self.buttonln, self.button_put_e, self.buttonP, self.buttonSin,
-                               self.buttonCos, self.buttonTg, self.buttonCtg, self.buttonArcsin,
-                               self.buttonArccos, self.buttonArctg, self.buttonArcctg]
+        current_state = self.type.cget('text')
 
-            for name in button_to_clear:
+        if current_state == "Simple version":
+            things_to_remove = [self.button1, self.button2, self.button3, self.button4, self.button5, self.button6,
+                                self.button7, self.button8, self.button9, self.button0, self.buttonDot,
+                                self.buttonEqual, self.buttonPlus, self.buttonMinus, self.buttonMulti,
+                                self.buttonDiv, self.buttonSquare, self.buttonSquareY, self.buttonRightPar,
+                                self.buttonLeftPar, self.buttonC, self.buttonCE, self.buttonBackspace,
+                                self.buttonSqrt, self.write_area, self.result_area, self.result_area_text,
+                                self.type, self.scrollbarX, self.scrollbarY]
+
+            for name in things_to_remove:
                 name.grid_remove()
-        except AttributeError:
-            try:
-                things_to_remove = [self.button1, self.button2, self.button3, self.button4, self.button5, self.button6,
-                                    self.button7, self.button8, self.button9, self.button0, self.buttonDot,
-                                    self.buttonEqual, self.buttonPlus, self.buttonMinus, self.buttonMulti,
-                                    self.buttonDiv, self.buttonSquare, self.buttonSquareY, self.buttonRightPar,
-                                    self.buttonLeftPar, self.buttonC, self.buttonCE, self.buttonBackspace,
-                                    self.buttonSqrt, self.write_area, self.result_area, self.result_area_text,
-                                    self.type, self.scrollbarX, self.scrollbarY]
+        elif current_state == "Scientific version":
+            things_to_remove = [self.button0, self.button1, self.button2, self.button3, self.button4, self.button5,
+                                self.button6, self.button7, self.button8, self.button9, self.buttonDot,
+                                self.buttonEqual, self.buttonLeftPar, self.buttonRightPar, self.buttonSqrt,
+                                self.buttonSquare,
+                                self.buttonSquareY, self.buttonPlus, self.buttonMinus, self.buttonDiv,
+                                self.buttonMulti, self.buttonC, self.buttonCE, self.buttonBackspace,
+                                self.write_area, self.result_area, self.result_area_text, self.scrollbarX,
+                                self.scrollbarY, self.type, self.buttonN, self.buttonE, self.button10,
+                                self.buttonlogx, self.buttonln, self.button_put_e, self.buttonP, self.buttonSin,
+                                self.buttonCos, self.buttonTg, self.buttonCtg, self.buttonArcsin,
+                                self.buttonArccos, self.buttonArctg, self.buttonArcctg]
 
-                for name in things_to_remove:
-                    name.grid_remove()
-            except AttributeError:
-                button_to_clear = [self.initial, self.day, self.month, self.year, self.sep1, self.sep2, self.sep3,
-                                   self.day_choose, self.day2_choose, self.month_choose, self.month2_choose,
-                                   self.year_choose, self.year2_choose, self.final, self.result_text, self.result_area2,
-                                   self.info, self.buttonClean, self.buttonGo]
+            for name in things_to_remove:
+                name.grid_remove()
+        elif current_state == "Date calculator":
+            things_to_remove = [self.initial, self.day, self.month, self.year, self.sep1, self.sep2, self.sep3,
+                                self.day_choose, self.day2_choose, self.month_choose, self.month2_choose,
+                                self.year_choose, self.year2_choose, self.final, self.result_text, self.result_area2,
+                                self.type, self.buttonClean, self.buttonGo]
 
-                for name in button_to_clear:
-                    name.grid_remove()
-
-
-
-
-
-
-
+            for name in things_to_remove:
+                name.grid_remove()
