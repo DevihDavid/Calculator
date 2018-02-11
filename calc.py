@@ -1,11 +1,6 @@
 from tkinter import *
 import functions
 from math import e, pi
-import datetime
-from tkinter.messagebox import showerror
-from tkinter import ttk
-from bs4 import BeautifulSoup
-import requests
 
 
 class Calculator(functions.Mixin):
